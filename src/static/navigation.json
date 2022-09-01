@@ -1,0 +1,39 @@
+{
+  "cities": [
+    {
+      "section": "cupertino",
+      "label": "Cupertino",
+      "utc": -7
+    },
+    {
+      "section": "new-york-city",
+      "label": "New York City",
+      "utc": -4
+    },
+    {
+      "section": "london",
+      "label": "London",
+      "utc": 1
+    },
+    {
+      "section": "amsterdam",
+      "label": "Amsterdam",
+      "utc": 2
+    },
+    {
+      "section": "tokyo",
+      "label": "Tokyo",
+      "utc": 9
+    },
+    {
+      "section": "hong-kong",
+      "label": "Hong Kong",
+      "utc": 8
+    },
+    {
+      "section": "sydney",
+      "label": "Sydney",
+      "utc": 10
+    }
+  ]
+}
