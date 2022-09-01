@@ -2,22 +2,27 @@ import React, { useEffect, useState } from 'react';
 import './clock.scss';
 
 const Clock = ({hourDiff}) => {
-  const [hour, setHour] = useState('');
-  const [min, setMin] = useState('');
-  const [sec, setSec] = useState('');
-  const [amPm, setAmPm] = useState('');
+  const [hour, setHour] = useState('00');
+  const [min, setMin] = useState('00');
+  const [sec, setSec] = useState('00');
+  const [amPm, setAmPm] = useState('AM');
+  let intervalID = null;
 
   useEffect(() => {
-    setInterval(() => {
-      const date = new Date();
-      let h = date.getHours();
-      let m = date.getMinutes();
-      let s = date.getSeconds();
-      let ampm = '';
+    if (intervalID) {
+      clearInterval(intervalID);
+    }
+
+    const getHours = (h) => {
+      h = h + hourDiff;
 
       if (h >= 12) {
-        h = h - 12;
-        ampm = 'PM';
+        if (h < 24) {
+          ampm = 'PM';
+        } else {
+          ampm = 'AM';
+        }
+        h = h % 12;
       } else {
         ampm = 'AM';
       }
@@ -26,16 +31,37 @@ const Clock = ({hourDiff}) => {
         h = 12;
       }
 
-      const printNumber = (num) => {
-        return num < 10 ? `0${num}` : `${num}`;
-      };
+      return h;
+    }
 
-      setHour(printNumber(h));
+    const printNumber = (num) => num < 10 ? `0${num}` : `${num}`;
+
+    let date = new Date();
+    let h = date.getHours();
+    let m = date.getMinutes();
+    let s = date.getSeconds();
+    let ampm = '';
+
+    setHour(printNumber(getHours(h)));
+    setMin(printNumber(m));
+    setSec(printNumber(s));
+    setAmPm(ampm);
+
+    intervalID = setInterval(() => {
+      // Get date and update again per second
+      date = new Date();
+      h = date.getHours();
+      m = date.getMinutes();
+      s = date.getSeconds();
+
+      setHour(printNumber(getHours(h)));
       setMin(printNumber(m));
       setSec(printNumber(s));
       setAmPm(ampm);
     }, 1000);
-  }, []);
+
+    return () => clearInterval(intervalID);
+  }, [hourDiff]);
 
   return (
     <ul className="clock">
