@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import './navbar.scss';
 
 // Nav item
@@ -38,6 +38,13 @@ const Nav = ({ items, onSelectedItem, initialItemSection = null }) => {
     onSelectedItem(item);
   };
 
+  const updateDashSpec = useCallback(() => {
+    if (!isHamburgerMenuActive) {
+      setDashWidth(getDashWidth(selectedItemRef));
+      setDashPosition(getDashPosition(selectedItemRef, dashWidth));
+    }
+  }, [selectedItemRef, dashWidth, isHamburgerMenuActive]);
+
   // Inital item selection
   useEffect(() => {
     const initialItem = initialItemSection ?
@@ -47,16 +54,14 @@ const Nav = ({ items, onSelectedItem, initialItemSection = null }) => {
 
   // Item selected
   useEffect(() => {
-  	setDashWidth(getDashWidth(selectedItemRef));
-  	setDashPosition(getDashPosition(selectedItemRef, dashWidth));
-  }, [selectedItemRef, dashWidth]);
+  	updateDashSpec();
+  }, [updateDashSpec]);
 
   // Window resized
   useLayoutEffect(() => {
   	const resizeListener = () => {
   		setBrowserWidth(window.innerWidth);
-  		setDashWidth(getDashWidth(selectedItemRef));
-  		setDashPosition(getDashPosition(selectedItemRef, dashWidth));
+      updateDashSpec();
     };
 
     window.addEventListener('resize', resizeListener);
@@ -72,12 +77,6 @@ const Nav = ({ items, onSelectedItem, initialItemSection = null }) => {
 			setIsHamburgerMenuActive(false);
 		}
 	},[browserWidth]);
-
-	// Burger menu active state chagned
-	useEffect(() => {
-		setDashWidth(getDashWidth(selectedItemRef));
-		setDashPosition(getDashPosition(selectedItemRef, dashWidth));
-	}, [isHamburgerMenuActive]);
 
   const handleHamburgerMenuClick = (e) => {
     setIsHamburgerMenuActive(current => !current);

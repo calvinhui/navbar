@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './clock.scss';
 
 const Clock = ({hourDiff}) => {
@@ -6,11 +6,11 @@ const Clock = ({hourDiff}) => {
   const [min, setMin] = useState('00');
   const [sec, setSec] = useState('00');
   const [amPm, setAmPm] = useState('AM');
-  let intervalID = null;
+  let intervalIDRef = useRef();
 
   useEffect(() => {
-    if (intervalID) {
-      clearInterval(intervalID);
+    if (intervalIDRef.current) {
+      clearInterval(intervalIDRef.current);
     }
 
     const getHours = (h) => {
@@ -47,7 +47,7 @@ const Clock = ({hourDiff}) => {
     setSec(printNumber(s));
     setAmPm(ampm);
 
-    intervalID = setInterval(() => {
+    intervalIDRef.current = setInterval(() => {
       // Get date and update again per second
       date = new Date();
       h = date.getHours();
@@ -60,7 +60,7 @@ const Clock = ({hourDiff}) => {
       setAmPm(ampm);
     }, 1000);
 
-    return () => clearInterval(intervalID);
+    return () => clearInterval(intervalIDRef.current);
   }, [hourDiff]);
 
   return (
