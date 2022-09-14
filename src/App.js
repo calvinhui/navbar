@@ -16,9 +16,11 @@ const App = () => {
         <Nav
             items={Navigation.cities}
             onSelectedItem={(item) => {
-              const localUTC = new Date().getHours() - new Date().getUTCHours();
+              const localUTC = new Date().getTimezoneOffset() / 60;
               const targetUTC = Navigation.cities.filter((c) => c.section === item.section)[0].utc;
-              setHourDiff(targetUTC - localUTC);
+              const timeDiff = localUTC + targetUTC;
+
+              setHourDiff(timeDiff);
             }}
         />
       </nav>

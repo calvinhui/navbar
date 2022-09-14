@@ -16,19 +16,22 @@ const Clock = ({hourDiff}) => {
     const getHours = (h) => {
       h = h + hourDiff;
 
-      if (h >= 12) {
-        if (h < 24) {
-          ampm = 'PM';
-        } else {
-          ampm = 'AM';
-        }
-        h = h % 12;
-      } else {
-        ampm = 'AM';
+      // If time is over 24 hours, its a day ahead.
+      // So minus 24 hours.
+      if (h > 24) {
+        h = h - 24;
       }
 
-      if (h === 0) {
-        h = 12;
+      //convert to 12 hour time base
+      if (h >= 12) {
+        h = h % 12;
+        ampm = 'PM';
+      } else {
+        if (h === 0) {
+          h = 12;
+        }
+
+        ampm = 'AM';
       }
 
       return h;
